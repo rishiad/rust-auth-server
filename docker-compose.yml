@@ -1,0 +1,22 @@
+version: '3.1'
+services:
+  database:
+      image: postgres:10.4-alpine
+      container_name: rust_auth_database
+      environment:
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: root
+        POSTGRES_DB: actixDB
+      expose:
+        - "5432"
+      ports:
+        - 8000:5432
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: rust_auth_pgadmin
+    ports:
+      - 5454:5454/tcp
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@mydomain.com
+      - PGADMIN_DEFAULT_PASSWORD=postgres
+      - PGADMIN_LISTEN_PORT=5454
