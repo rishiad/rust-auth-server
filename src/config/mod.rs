@@ -3,7 +3,7 @@ use eyre::WrapErr;
 use color_eyre::Result;
 use serde::Deserialize;
 use dotenv::dotenv;
-use sqlx::postgres::PgPool;
+use sqlx::postgres::{PgPool, PgPoolOptions};
 use tracing_subscriber::EnvFilter;
 use tracing::{info, instrument};
 
@@ -12,7 +12,7 @@ use tracing::{info, instrument};
 pub struct Config {
     pub host: String,
     pub port: i32,
-    pub db_url: String
+    pub database_url: String
 }
 
 impl Config {
@@ -35,10 +35,10 @@ impl Config {
     pub async fn db_pool(&self) -> Result<PgPool> {
         info!("Creating DB connection pool...");
 
-        PgPool::builder() // update according to new spec
-            .connection_timeout(Duration::from_secs(30))
-            .build(&self.db_url)
+        Ok(PgPoolOptions::new()
+            .max_connections(5)
+            .connect(&self.database_url)
             .await
-            .context("creating db connection pool")
+            .context("Connecting to database pool...")?)
     }
 }
