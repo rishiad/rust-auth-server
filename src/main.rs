@@ -4,6 +4,8 @@ extern crate validator_derive;
 mod config;
 mod models;
 mod handlers;
+mod db;
+mod errors;
 
 use color_eyre::Result;
 use tracing::info;
@@ -16,11 +18,13 @@ async fn main() -> Result<()> {
                     .expect("Server Config");
     let pool = config.db_pool().await
         .expect("Database Config");
+    let cryptoService = config.crypto_service();
     info!("Starting Server...");
     HttpServer::new( move || {
         App::new()
             .wrap(Logger::default())
-            .data(pool.clone())
+            .app_data(pool.clone())
+            .app_data(cryptoService.clone())
             .configure(app_config)
     })
         .bind(format!("{}:{}", config.host, config.port))?
