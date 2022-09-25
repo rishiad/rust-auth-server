@@ -17,7 +17,8 @@ pub struct Config {
     pub host: String,
     pub port: i32,
     pub database_url: String,
-    pub secret_key: String
+    pub secret_key: String,
+    pub jwt_secret: String
 }
 
 impl Config {
@@ -48,6 +49,6 @@ impl Config {
     }
 
     pub fn crypto_service(&self) -> CryptoService {
-        CryptoService { key: Arc::new(self.secret_key.clone()), jwt_secret: todo!() }
+        CryptoService { key: Arc::new(self.secret_key.clone()), jwt_secret: Arc::new(self.jwt_secret.clone()) }
     }
 }

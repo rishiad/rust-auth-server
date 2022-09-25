@@ -8,11 +8,12 @@ mod db;
 mod errors;
 
 use color_eyre::Result;
-use tracing::info;
+use tracing::{info, instrument};
 use crate::{config::Config, handlers::app_config};
-use actix_web::{App, HttpServer, middleware::Logger};
+use actix_web::{App, HttpServer, middleware::Logger, web::Data};
 
 #[actix_rt::main]
+#[instrument]
 async fn main() -> Result<()> {
     let config: Config = Config::from_env()
                     .expect("Server Config");
@@ -23,8 +24,8 @@ async fn main() -> Result<()> {
     HttpServer::new( move || {
         App::new()
             .wrap(Logger::default())
-            .app_data(pool.clone())
-            .app_data(cryptoService.clone())
+            .app_data(Data::new(pool.clone()))
+            .app_data(Data::new(cryptoService.clone()))
             .configure(app_config)
     })
         .bind(format!("{}:{}", config.host, config.port))?

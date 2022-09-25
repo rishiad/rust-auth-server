@@ -9,7 +9,7 @@ pub struct User {
     pub username: String,
     pub email: String,
     #[serde(skip_serializing)]
-    pub password_hash: String,
+    pub pass_hash: String,
     pub full_name: Option<String>,
     pub bio: Option<String>, 
     pub created_at: NaiveDateTime,

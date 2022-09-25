@@ -22,8 +22,10 @@ pub struct Claims {
     pub exp: i64
 }
 
+#[derive(Serialize)]
+
 pub struct Auth {
-    pub token: String
+    pub token: String,
 }
 
 impl CryptoService {
@@ -41,18 +43,18 @@ impl CryptoService {
     pub async fn verify_password(
         &self,
         password: &str,
-        password_hash: &str
+        pass_hash: &str
     ) -> Result<bool> {
         Verifier::default()
             .with_secret_key(&*self.key)
-            .with_hash(password_hash)
+            .with_hash(pass_hash)
             .with_password(password)
             .verify_non_blocking()
             .compat()
             .await
             .map_err(|err| eyre!("Verifying password error: {}", err))
     }
-
+    #[instrument(skip(self))]
     pub async fn gen_jwt(&self, user_id: Uuid) -> Result<Result<String>> {
         let jwt_key = self.jwt_secret.clone();
         Ok(block(move || {
