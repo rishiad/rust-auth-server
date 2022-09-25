@@ -1,4 +1,4 @@
-Rust JWT User Authentication Server built with actix
+## Rust JWT User Authentication Server built with actix
 
 ### API
 - Health endpoint: `GET` /
