@@ -3,12 +3,12 @@ Rust JWT User Authentication Server built with actix
 ### API
 - Health endpoint: `GET` /
   ```
-  curl http://localhost:3000/
+  curl http://localhost:3000/callback
   ```
 - User Signup: `POST` /signup
   ```
   curl --request POST \
-    --url http://localhost:3000/signup \
+    --url http://localhost:3000/register \
     --header 'content-type: application/json' \
     --data '{
         "username": "user1",
